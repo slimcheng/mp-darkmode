@@ -1,0 +1,27 @@
+{
+  "name": "darkmode-convert",
+  "version": "1.0.0",
+  "description": "图文 Dark Mode 转换算法",
+  "main": "index.js",
+  "dependencies": {
+    "color": "^3.1.2",
+    "color-name": "^1.1.4"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wechatjs/darkmode-convert.git"
+  },
+  "keywords": [
+    "Darkmode"
+  ],
+  "author": "jaminqian",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/wechatjs/darkmode-convert/issues"
+  },
+  "homepage": "https://github.com/wechatjs/darkmode-convert#readme"
+}
