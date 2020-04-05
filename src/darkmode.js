@@ -6,8 +6,8 @@
  */
 
 // dependencies
-const Color = require('color');
-const ColorName = require('color-name');
+import Color from 'color';
+import ColorName from 'color-name';
 ColorName.windowtext = [0, 0, 0]; // 补上这个colorName
 
 const colorNameReg = new RegExp(Object.keys(ColorName).join('|'), 'ig');
@@ -508,53 +508,45 @@ const convert = el => {
 
 // Dark Mode切换
 const switchToDarkmode = mqlObj => {
-  opt.force && (cssAll = ['', '']); // 如果是强制运行Dark Mode处理逻辑，则重置cssAll
-
   if (cssAll === null) return; // 已运行过Dark Mode处理逻辑则不再运行
 
   try {
     if (mqlObj.matches) { // Dark Mode
-      if (opt.type === 'dom') { // 处理节点
-        if (!allNodes.length && delayNodes.length) { // 如果没有节点但有延迟节点，则运行延迟节点，然后再清空延迟节点
-          allNodes = delayNodes;
-          delayNodes = [];
+      if (!allNodes.length && delayNodes.length) { // 如果没有节点但有延迟节点，则运行延迟节点，然后再清空延迟节点
+        allNodes = delayNodes;
+        delayNodes = [];
+      }
+
+      allNodes.forEach(node => {
+        if (node.className && typeof node.className === 'string') {
+          node.className = node.className.replace(CLASS_REG, ''); // 过滤掉原有的Dark Mode class，避免外部复制文章时把文章内的Dark Mode class也复制过去导致新文章在Dark Mode下样式错乱
         }
 
-        allNodes.forEach(node => {
-          if (node.className && typeof node.className === 'string') {
-            node.className = node.className.replace(CLASS_REG, ''); // 过滤掉原有的Dark Mode class，避免外部复制文章时把文章内的Dark Mode class也复制过去导致新文章在Dark Mode下样式错乱
-          }
-
-          if (!needJudgeFirstPage) { // 不需要判断首屏
+        if (!needJudgeFirstPage) { // 不需要判断首屏
+          cssAll[1] += convert(node); // 写入非首屏样式
+        } else { // 判断首屏
+          const rect = node.getBoundingClientRect();
+          const top = rect.top;
+          const bottom = rect.bottom;
+          if (top <= 0 && bottom <= 0) { // 首屏前面
             cssAll[1] += convert(node); // 写入非首屏样式
-          } else { // 判断首屏
-            const rect = node.getBoundingClientRect();
-            const top = rect.top;
-            const bottom = rect.bottom;
-            if (top <= 0 && bottom <= 0) { // 首屏前面
-              cssAll[1] += convert(node); // 写入非首屏样式
-            } else if ((top > 0 && top < PAGE_HEIGHT) || (bottom > 0 && bottom < PAGE_HEIGHT)) { // 首屏
-              firstPageNodes.push(node); // 记录首屏节点
-              cssAll[0] += convert(node); // 写入首屏样式
-            } else { // 首屏后面，理论上，这里最多只会进来一次
-              needJudgeFirstPage = false; // 至此，不需要再判断首屏了
+          } else if ((top > 0 && top < PAGE_HEIGHT) || (bottom > 0 && bottom < PAGE_HEIGHT)) { // 首屏
+            firstPageNodes.push(node); // 记录首屏节点
+            cssAll[0] += convert(node); // 写入首屏样式
+          } else { // 首屏后面，理论上，这里最多只会进来一次
+            needJudgeFirstPage = false; // 至此，不需要再判断首屏了
 
-              // 显示首屏
-              writeStyle(cssAll[0]); // 写入首屏样式表
-              firstPageNodes.forEach(firstPageNode => {
-                firstPageNode.style.visibility = 'visible';
-              }); // 显示首屏节点
-              cssAll[0] = ''; // 写入首屏样式表后清空内存中的首屏样式
+            // 显示首屏
+            writeStyle(cssAll[0]); // 写入首屏样式表
+            firstPageNodes.forEach(firstPageNode => {
+              firstPageNode.style.visibility = 'visible';
+            }); // 显示首屏节点
+            cssAll[0] = ''; // 写入首屏样式表后清空内存中的首屏样式
 
-              cssAll[1] += convert(node); // 写入非首屏样式
-            }
+            cssAll[1] += convert(node); // 写入非首屏样式
           }
-        });
-      } else if (opt.type === 'bg') { // 处理背景
-        forEachTextList(text => inPosStack(text, bg => {
-          cssAll[1] += genCss(bg.className, bg.cssKV);
-        }));
-      }
+        }
+      });
     } else {
       // 首次加载页面时为非Dark Mode，标记为不需要判断首屏
       needJudgeFirstPage = false;
@@ -586,7 +578,7 @@ const switchToDarkmode = mqlObj => {
  * @param {Boolean}  opt.needJudgeFirstPage 是否需要判断首屏
  * @param {Boolean}  opt.delayBgJudge       是否延迟背景判断
  */
-export default function (nodes, opt) {
+const run = (nodes, opt = {}) => {
   opt.needJudgeFirstPage !== undefined && (needJudgeFirstPage = opt.needJudgeFirstPage);
   opt.delayBgJudge !== undefined && (delayBgJudge = opt.delayBgJudge);
 
@@ -596,4 +588,8 @@ export default function (nodes, opt) {
 
   allNodes = nodes || [];
   switchToDarkmode(mql); // 手动执行一次
+};
+
+export {
+  run
 };

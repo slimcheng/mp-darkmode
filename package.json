@@ -2,14 +2,21 @@
   "name": "darkmode-convert",
   "version": "1.0.0",
   "description": "图文 Dark Mode 转换算法",
-  "main": "index.js",
+  "main": "dist/darkmode.js",
   "dependencies": {
     "color": "^3.1.2",
     "color-name": "^1.1.4"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "@babel/core": "^7.9.0",
+    "@babel/preset-env": "^7.9.0",
+    "babel-loader": "^8.1.0",
+    "webpack": "^4.42.1",
+    "webpack-cli": "^3.3.11"
+  },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "watch": "webpack --config webpack.config.js --watch",
+    "build": "webpack --config webpack.config.js"
   },
   "repository": {
     "type": "git",
