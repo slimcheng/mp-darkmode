@@ -30,7 +30,7 @@ import {
   CLASS_PREFIX,
 
   PAGE_HEIGHT
-} from './common/constant';
+} from './modules/constant';
 const classReg = new RegExp(`${CLASS_PREFIX}[^ ]+`, 'g');
 
 // Darkmode配置
@@ -46,24 +46,24 @@ const config = {
 };
 
 // 文本节点队列
-import TextNodeQueue from './common/textNodeQueue';
+import TextNodeQueue from './modules/textNodeQueue';
 const tnQueue = new TextNodeQueue(config, `${CLASS_PREFIX}text__`);
 
 // 需要判断位置的背景节点堆栈
-import BgNodeStack from './common/bgNodeStack';
+import BgNodeStack from './modules/bgNodeStack';
 const bgStack = new BgNodeStack(config, `${CLASS_PREFIX}bg__`);
 
 // 样式相关操作工具对象
-import CssUtils from './common/cssUtils';
+import CssUtils from './modules/cssUtils';
 const cssUtils = new CssUtils(config);
 
 // 节点相关操作工具对象
 import {
   DomUtils
-} from './common/domUtils';
+} from './modules/domUtils';
 const domUtils = new DomUtils(config);
 
-import SDK from './common/sdk';
+import SDK from './modules/sdk';
 const sdk = new SDK({
   config,
   tnQueue,
