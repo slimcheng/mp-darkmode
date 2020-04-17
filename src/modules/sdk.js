@@ -219,8 +219,6 @@ export default class SDK {
     const styles = el.style;
     let cssKV = ''; // css键值对
     let css = ''; // css
-
-    const isTable = TABLE_NAME.indexOf(nodeName) > -1;
     let hasInlineColor = false; // 是否有自定义字体颜色
     let hasInlineBackground = false;
     let hasInlineBackgroundImage = false;
@@ -282,12 +280,20 @@ export default class SDK {
       return -1;
     });
 
-    if (isTable && !hasInlineBackground) { // 如果table没有内联样式
+    if (TABLE_NAME.indexOf(nodeName) > -1 && !hasInlineBackground) { // 如果table没有内联样式
       let color = hasTableClass(el); // 获取class对应的lm色值
       if (!color) color = el.getAttribute('bgcolor'); // 如果没有class则获取bgcolor的色值
       if (color) { // 有色值（class对应的lm色值或者是bgcolor色值），则当做内联样式来处理
         cssKVList.unshift(['background-color', Color(color).toString()]);
         hasInlineBackground = true;
+      }
+    }
+
+    if (nodeName === 'FONT' && !hasInlineColor) { // 如果是font标签且没有内联样式
+      const color = el.getAttribute('color'); // 获取color的色值
+      if (color) { // 有色值，则当做内联样式来处理
+        cssKVList.push(['color', Color(color).toString()]);
+        hasInlineColor = true;
       }
     }
 

@@ -1,7 +1,7 @@
 {
   "name": "darkmode-convert",
   "version": "1.0.0",
-  "description": "图文 Dark Mode 转换算法",
+  "description": "微信公众平台图文 Dark Mode 转换算法",
   "main": "dist/darkmode.js",
   "dependencies": {
     "color": "^3.1.2",
@@ -16,8 +16,8 @@
     "webpack-cli": "^3.3.11"
   },
   "scripts": {
-    "watch": "webpack --config webpack.config.js --watch",
-    "build": "webpack --config webpack.config.js"
+    "dev": "webpack --config build/dev.config.js --watch",
+    "build": "webpack --config build/prod.config.js"
   },
   "repository": {
     "type": "git",

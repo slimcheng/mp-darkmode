@@ -1,3 +1,8 @@
+/**
+ * @name 常量
+ *
+ */
+
 export const MEDIA_QUERY = '(prefers-color-scheme: dark)'; // Dark Mode的CSS媒体查询
 
 export const CLASS_PREFIX = 'js_darkmode__'; // Dark Mode class前缀

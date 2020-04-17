@@ -3,9 +3,9 @@ const path = require('path');
 module.exports = {
   devtool: 'source-map',
   mode: 'development',
-  entry: './src/darkmode.js',
+  entry: path.resolve(__dirname, '../src/darkmode.js'),
   output: {
-    path: path.resolve(__dirname, 'dist'),
+    path: path.resolve(__dirname, '../dist'),
     filename: 'darkmode.js',
     library: 'Darkmode',
     libraryTarget: 'umd',
