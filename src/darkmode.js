@@ -140,19 +140,17 @@ export function run(nodes, opt) {
 };
 
 export function init(opt = {}) {
-  opt = JSON.parse(JSON.stringify(opt)); // 简单深复制一下
-
-  const whitelist = opt.whitelist || {};
-  delete opt.whitelist;
-
-  Object.assign(config, opt);
-
-  // 无重复追加whitelist.tagName
   const tagName = config.whitelist.tagName;
-  whitelist.tagName && whitelist.tagName.forEach(item => {
+
+  typeof opt.error === 'function' && (config.error = opt.error);
+  ['dark', 'light'].indexOf(opt.mode) > -1 && (config.mode = opt.mode);
+  opt.whitelist && opt.whitelist.tagName instanceof Array && opt.whitelist.tagName.forEach(item => {
     item = item.toUpperCase();
     tagName.indexOf(item) === -1 && tagName.push(item);
   });
+  typeof opt.needJudgeFirstPage === 'boolean' && (config.needJudgeFirstPage = opt.needJudgeFirstPage);
+  typeof opt.delayBgJudge === 'boolean' && (config.delayBgJudge = opt.delayBgJudge);
+  opt.container instanceof HTMLElement && (config.container = opt.container);
 
   if (!cssUtils.mode && mql === null) {
     // 匹配媒体查询
