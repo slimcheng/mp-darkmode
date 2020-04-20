@@ -115,6 +115,8 @@ const switchToDarkmode = (mqlObj, opt = {
           cssUtils.addCss(cssUtils.genCss(bg.className, bg.cssKV), false); // 写入非首屏样式
         }));
       }
+
+      cssUtils.writeStyle(); // 写入非首屏样式表
     } else {
       // 首次加载页面时为非Dark Mode，标记为不需要判断首屏
       config.needJudgeFirstPage = false;
@@ -126,8 +128,6 @@ const switchToDarkmode = (mqlObj, opt = {
         domUtils.delay(); // 将节点转移到延迟处理队列里
       }
     }
-
-    cssUtils.writeStyle(); // 写入非首屏样式表
   } catch (e) {
     console.error(e);
     typeof config.error === 'function' && config.error(e);
