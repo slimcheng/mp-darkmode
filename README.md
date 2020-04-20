@@ -1,2 +1,3 @@
-# darkmode-convert
-图文 Dark Mode 转换算法
+# mp-darkmode
+
+微信公众平台图文 Dark Mode 转换算法
