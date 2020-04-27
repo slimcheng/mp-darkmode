@@ -34,6 +34,7 @@ import {
   TEXTCOLOR,
   DEFAULT_DARK_BGCOLOR,
   DEFAULT_LIGHT_BGCOLOR,
+  GRAY_MASK_COLOR,
 
   DEFAULT_DARK_BGCOLOR_BRIGHTNESS,
   LIMIT_LOW_BGCOLOR_BRIGHTNESS,
@@ -391,7 +392,6 @@ export default class SDK {
         if ((isBackgroundAttr || isBorderImageAttr) && /url\([^\)]*\)/i.test(value)) {
           cssChange = true;
           let imgBgColor = el.getAttribute(ORIGINAL_BGCOLORATTR) || DEFAULT_LIGHT_BGCOLOR;
-          const imgBgCover = 'rgba(0,0,0,0.1)';
 
           // 在背景图片下加一层原背景颜色：
           // background-image使用多层背景(注意background-position也要多加一层 https://www.w3.org/TR/css-backgrounds-3/#layering)；
@@ -408,7 +408,7 @@ export default class SDK {
 
             // background-image
             if (isBackgroundAttr) {
-              newValue = `linear-gradient(${imgBgCover}, ${imgBgCover}),${matches}`;
+              newValue = `linear-gradient(${GRAY_MASK_COLOR}, ${GRAY_MASK_COLOR}),${matches}`;
               tmpCssKvStr = this._cssUtils.genCssKV(key, `${newValue},linear-gradient(${imgBgColor}, ${imgBgColor})`);
               if (elBackgroundPositionAttr) {
                 newBackgroundPositionValue = `top left,${elBackgroundPositionAttr}`;
@@ -423,7 +423,7 @@ export default class SDK {
               this._bgStack.push(el, tmpCssKvStr); // 背景图入栈
             } else {
               // border-image元素，如果当前元素没有背景颜色，补背景颜色
-              !hasInlineBackground && this._bgStack.push(el, this._cssUtils.genCssKV('background-image', `linear-gradient(${imgBgCover}, ${imgBgCover}),linear-gradient(${imgBgColor}, ${imgBgColor})`)); // 背景图入栈
+              !hasInlineBackground && this._bgStack.push(el, this._cssUtils.genCssKV('background-image', `linear-gradient(${GRAY_MASK_COLOR}, ${GRAY_MASK_COLOR}),linear-gradient(${imgBgColor}, ${imgBgColor})`)); // 背景图入栈
             }
             return newValue;
           });
