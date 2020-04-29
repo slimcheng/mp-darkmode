@@ -2635,7 +2635,7 @@ var BgNodeStack = /*#__PURE__*/function () {
 /*!*********************************!*\
   !*** ./src/modules/constant.js ***!
   \*********************************/
-/*! exports provided: MEDIA_QUERY, CLASS_PREFIX, HTML_CLASS, COLORATTR, BGCOLORATTR, ORIGINAL_COLORATTR, ORIGINAL_BGCOLORATTR, BGIMAGEATTR, TEXTCOLOR, DEFAULT_DARK_BGCOLOR, DEFAULT_LIGHT_BGCOLOR, DEFAULT_DARK_BGCOLOR_BRIGHTNESS, LIMIT_LOW_BGCOLOR_BRIGHTNESS, PAGE_HEIGHT, TABLE_NAME, IS_PC */
+/*! exports provided: MEDIA_QUERY, CLASS_PREFIX, HTML_CLASS, COLORATTR, BGCOLORATTR, ORIGINAL_COLORATTR, ORIGINAL_BGCOLORATTR, BGIMAGEATTR, TEXTCOLOR, DEFAULT_DARK_BGCOLOR, DEFAULT_LIGHT_BGCOLOR, DEFAULT_DARK_BGCOLOR_BRIGHTNESS, LIMIT_LOW_BGCOLOR_BRIGHTNESS, DEFAULT_DARK_OFFSET_PERCEIVED_BRIGHTNESS, PAGE_HEIGHT, TABLE_NAME, IS_PC */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -2653,6 +2653,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "DEFAULT_LIGHT_BGCOLOR", function() { return DEFAULT_LIGHT_BGCOLOR; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "DEFAULT_DARK_BGCOLOR_BRIGHTNESS", function() { return DEFAULT_DARK_BGCOLOR_BRIGHTNESS; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "LIMIT_LOW_BGCOLOR_BRIGHTNESS", function() { return LIMIT_LOW_BGCOLOR_BRIGHTNESS; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "DEFAULT_DARK_OFFSET_PERCEIVED_BRIGHTNESS", function() { return DEFAULT_DARK_OFFSET_PERCEIVED_BRIGHTNESS; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "PAGE_HEIGHT", function() { return PAGE_HEIGHT; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "TABLE_NAME", function() { return TABLE_NAME; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "IS_PC", function() { return IS_PC; });
@@ -2673,14 +2674,15 @@ var BGCOLORATTR = "data-darkmode-bgcolor-".concat(RANDOM);
 var ORIGINAL_COLORATTR = "data-darkmode-original-color-".concat(RANDOM);
 var ORIGINAL_BGCOLORATTR = "data-darkmode-original-bgcolor-".concat(RANDOM);
 var BGIMAGEATTR = "data-darkmode-bgimage-".concat(RANDOM);
-var TEXTCOLOR = 'rgba(0,0,0,0.9)'; // 非Dark Mode下字体颜色
+var TEXTCOLOR = 'rgb(25,25,25)'; // 非Dark Mode下字体颜色
 
-var DEFAULT_DARK_BGCOLOR = '#232323'; // Dark Mode下背景颜色
+var DEFAULT_DARK_BGCOLOR = '#191919'; // Dark Mode下背景颜色
 
 var DEFAULT_LIGHT_BGCOLOR = '#fff'; // 非Dark Mode下背景颜色
 
-var DEFAULT_DARK_BGCOLOR_BRIGHTNESS = 35;
+var DEFAULT_DARK_BGCOLOR_BRIGHTNESS = 25;
 var LIMIT_LOW_BGCOLOR_BRIGHTNESS = 60;
+var DEFAULT_DARK_OFFSET_PERCEIVED_BRIGHTNESS = 138;
 var PAGE_HEIGHT = window.getInnerHeight && window.getInnerHeight() || window.innerHeight || document.documentElement.clientHeight;
 var TABLE_NAME = ['TABLE', 'TR', 'TD', 'TH']; // 支持bgcolor属性的table标签列表
 
@@ -3122,8 +3124,8 @@ var SDK = /*#__PURE__*/function () {
         }
 
         if (hsl[1] === 0 && hsl[2] > 40 || perceivedBrightness > whiteColorBrightness) {
-          // 饱和度为0（黑白灰色），亮度大于40%或感知亮度大于250（白色）时，做亮度取反处理（Dark Mode 默认底色亮度为14%）
-          newColor = color__WEBPACK_IMPORTED_MODULE_0___default.a.hsl(0, 0, Math.min(100, 100 + 14 - hsl[2])); // console.info('[背景] 白改黑，感知亮度%d：%c  测试  %c  测试  ', perceivedBrightness, `color:#fff;background:rgb(${rgb});`, `color:#fff;background:hsl(${hsl[0]},${hsl[1]}%,${hsl[2]}%)`);
+          // 饱和度为0（黑白灰色），亮度大于40%或感知亮度大于250（白色）时，做亮度取反处理（Dark Mode 默认底色亮度为10%）
+          newColor = color__WEBPACK_IMPORTED_MODULE_0___default.a.hsl(0, 0, Math.min(100, 100 + 10 - hsl[2])); // console.info('[背景] 白改黑，感知亮度%d：%c  测试  %c  测试  ', perceivedBrightness, `color:#fff;background:rgb(${rgb});`, `color:#fff;background:hsl(${hsl[0]},${hsl[1]}%,${hsl[2]}%)`);
         } else if (perceivedBrightness > limitBright) {
           // 感知亮度大于limitBright，将感知亮度设为limitBright
           var ratio = limitBright * 1000 / (rgb[0] * 299 + rgb[1] * 587 + rgb[2] * 114);
@@ -3195,7 +3197,12 @@ var SDK = /*#__PURE__*/function () {
 
             if (perceivedBrightness >= limitLowTextBright) {
               // el.style.outline = '1px solid red';
-              newColor = color__WEBPACK_IMPORTED_MODULE_0___default.a.hsl.apply(color__WEBPACK_IMPORTED_MODULE_0___default.a, _toConsumableArray(hsl));
+              // 现以最小改动满足高对比亮度差值的文本亮度压制，后面优化
+              if (perceivedBrightness - parentElementBGWithOpacityPerceivedBrightness > _constant__WEBPACK_IMPORTED_MODULE_2__["DEFAULT_DARK_OFFSET_PERCEIVED_BRIGHTNESS"]) {
+                newColor = adjustTextBrightnessByLimitBrightness(rgb, parentElementBGWithOpacityPerceivedBrightness + _constant__WEBPACK_IMPORTED_MODULE_2__["DEFAULT_DARK_OFFSET_PERCEIVED_BRIGHTNESS"]);
+              } else {
+                newColor = color__WEBPACK_IMPORTED_MODULE_0___default.a.hsl.apply(color__WEBPACK_IMPORTED_MODULE_0___default.a, _toConsumableArray(hsl));
+              }
             } else {
               newColor = adjustTextBrightnessByLimitBrightness(rgb, limitLowTextBright);
             }

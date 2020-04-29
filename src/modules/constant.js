@@ -16,12 +16,13 @@ export const ORIGINAL_COLORATTR = `data-darkmode-original-color-${RANDOM}`;
 export const ORIGINAL_BGCOLORATTR = `data-darkmode-original-bgcolor-${RANDOM}`;
 export const BGIMAGEATTR = `data-darkmode-bgimage-${RANDOM}`;
 
-export const TEXTCOLOR = 'rgba(0,0,0,0.9)'; // 非Dark Mode下字体颜色
-export const DEFAULT_DARK_BGCOLOR = '#232323'; // Dark Mode下背景颜色
+export const TEXTCOLOR = 'rgb(25,25,25)'; // 非Dark Mode下字体颜色
+export const DEFAULT_DARK_BGCOLOR = '#191919'; // Dark Mode下背景颜色
 export const DEFAULT_LIGHT_BGCOLOR = '#fff'; // 非Dark Mode下背景颜色
 
-export const DEFAULT_DARK_BGCOLOR_BRIGHTNESS = 35;
+export const DEFAULT_DARK_BGCOLOR_BRIGHTNESS = 25;
 export const LIMIT_LOW_BGCOLOR_BRIGHTNESS = 60;
+export const DEFAULT_DARK_OFFSET_PERCEIVED_BRIGHTNESS = 138;
 
 export const PAGE_HEIGHT = (window.getInnerHeight && window.getInnerHeight()) || window.innerHeight || document.documentElement.clientHeight;
 

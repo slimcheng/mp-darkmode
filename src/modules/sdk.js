@@ -37,6 +37,7 @@ import {
 
   DEFAULT_DARK_BGCOLOR_BRIGHTNESS,
   LIMIT_LOW_BGCOLOR_BRIGHTNESS,
+  DEFAULT_DARK_OFFSET_PERCEIVED_BRIGHTNESS,
 
   TABLE_NAME,
 
@@ -69,7 +70,7 @@ export default class SDK {
   _adjustBrightness(color, el, options) {
     // 背景：
     // 处理原则：白背景改黑，其他高感知亮度背景调暗，低亮度适当提高亮度（感知亮度：https://www.w3.org/TR/AERT/#color-contrast）
-    // 处理方法：黑白灰色（h=0，s=0）亮度大于40%时，做取反处理（darkmode默认底色亮度为14%）；感知亮度大于190，取190；其他亮度小于26%时，设为26%。
+    // 处理方法：黑白灰色（h=0，s=0）亮度大于40%时，做取反处理（darkmode默认底色亮度为10%）；感知亮度大于190，取190；其他亮度小于26%时，设为26%。
     // 遗留问题：高亮度背景高亮度字体有些case有问题（使用感知亮度算法解决大部分case）
 
     // 字体、边框：
@@ -103,8 +104,8 @@ export default class SDK {
       }
 
       if ((hsl[1] === 0 && hsl[2] > 40) || perceivedBrightness > whiteColorBrightness) {
-        // 饱和度为0（黑白灰色），亮度大于40%或感知亮度大于250（白色）时，做亮度取反处理（Dark Mode 默认底色亮度为14%）
-        newColor = Color.hsl(0, 0, Math.min(100, 100 + 14 - hsl[2]));
+        // 饱和度为0（黑白灰色），亮度大于40%或感知亮度大于250（白色）时，做亮度取反处理（Dark Mode 默认底色亮度为10%）
+        newColor = Color.hsl(0, 0, Math.min(100, 100 + 10 - hsl[2]));
         // console.info('[背景] 白改黑，感知亮度%d：%c  测试  %c  测试  ', perceivedBrightness, `color:#fff;background:rgb(${rgb});`, `color:#fff;background:hsl(${hsl[0]},${hsl[1]}%,${hsl[2]}%)`);
       } else if (perceivedBrightness > limitBright) {
         // 感知亮度大于limitBright，将感知亮度设为limitBright
@@ -176,7 +177,12 @@ export default class SDK {
 
           if (perceivedBrightness >= limitLowTextBright) {
             // el.style.outline = '1px solid red';
-            newColor = Color.hsl(...hsl);
+            // 现以最小改动满足高对比亮度差值的文本亮度压制，后面优化
+            if (perceivedBrightness - parentElementBGWithOpacityPerceivedBrightness > DEFAULT_DARK_OFFSET_PERCEIVED_BRIGHTNESS) {
+              newColor = adjustTextBrightnessByLimitBrightness(rgb, parentElementBGWithOpacityPerceivedBrightness + DEFAULT_DARK_OFFSET_PERCEIVED_BRIGHTNESS);
+            } else {
+              newColor = Color.hsl(...hsl);
+            }
           } else {
             newColor = adjustTextBrightnessByLimitBrightness(rgb, limitLowTextBright);
           }
