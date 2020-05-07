@@ -88,6 +88,9 @@ const switchToDarkmode = (mqlObj, opt = {
             node.className = node.className.replace(classReg, ''); // 过滤掉原有的Dark Mode class，避免外部复制文章时把文章内的Dark Mode class也复制过去导致新文章在Dark Mode下样式错乱
           }
 
+          if (node.nodeName === 'IMG') console.log('img');
+          // if (node.nodeName === 'IMG') node.addEventListener('load', () => console.log('load'), false);
+
           if (!config.needJudgeFirstPage) { // 不需要判断首屏
             cssUtils.addCss(sdk.convert(node), false); // 写入非首屏样式
           } else { // 判断首屏

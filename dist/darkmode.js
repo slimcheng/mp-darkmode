@@ -2404,6 +2404,8 @@ var switchToDarkmode = function switchToDarkmode(mqlObj) {
             node.className = node.className.replace(classReg, ''); // 过滤掉原有的Dark Mode class，避免外部复制文章时把文章内的Dark Mode class也复制过去导致新文章在Dark Mode下样式错乱
           }
 
+          if (node.nodeName === 'IMG') console.log('img'); // if (node.nodeName === 'IMG') node.addEventListener('load', () => console.log('load'), false);
+
           if (!config.needJudgeFirstPage) {
             // 不需要判断首屏
             cssUtils.addCss(sdk.convert(node), false); // 写入非首屏样式
@@ -3092,7 +3094,7 @@ var SDK = /*#__PURE__*/function () {
     value: function _adjustBrightness(color, el, options) {
       // 背景：
       // 处理原则：白背景改黑，其他高感知亮度背景调暗，低亮度适当提高亮度（感知亮度：https://www.w3.org/TR/AERT/#color-contrast）
-      // 处理方法：黑白灰色（h=0，s=0）亮度大于40%时，做取反处理（darkmode默认底色亮度为14%）；感知亮度大于190，取190；其他亮度小于26%时，设为26%。
+      // 处理方法：黑白灰色（h=0，s=0）亮度大于40%时，做取反处理（darkmode默认底色亮度为10%）；感知亮度大于190，取190；其他亮度小于26%时，设为26%。
       // 遗留问题：高亮度背景高亮度字体有些case有问题（使用感知亮度算法解决大部分case）
       // 字体、边框：
       // 处理原则：高亮度字体压字体亮度(白色除外)，低亮度字体调亮（补充优化：带背景图片子元素字体颜色不变，带高感知亮度背景颜色子元素字体颜色不变），带背景图片字体补底色
