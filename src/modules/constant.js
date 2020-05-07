@@ -19,6 +19,7 @@ export const BGIMAGEATTR = `data-darkmode-bgimage-${RANDOM}`;
 export const TEXTCOLOR = 'rgb(25,25,25)'; // 非Dark Mode下字体颜色
 export const DEFAULT_DARK_BGCOLOR = '#191919'; // Dark Mode下背景颜色
 export const DEFAULT_LIGHT_BGCOLOR = '#fff'; // 非Dark Mode下背景颜色
+export const GRAY_MASK_COLOR = 'rgba(0,0,0,0.1)'; // 灰色蒙层色值
 
 export const DEFAULT_DARK_BGCOLOR_BRIGHTNESS = 25;
 export const LIMIT_LOW_BGCOLOR_BRIGHTNESS = 60;

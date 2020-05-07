@@ -2635,7 +2635,7 @@ var BgNodeStack = /*#__PURE__*/function () {
 /*!*********************************!*\
   !*** ./src/modules/constant.js ***!
   \*********************************/
-/*! exports provided: MEDIA_QUERY, CLASS_PREFIX, HTML_CLASS, COLORATTR, BGCOLORATTR, ORIGINAL_COLORATTR, ORIGINAL_BGCOLORATTR, BGIMAGEATTR, TEXTCOLOR, DEFAULT_DARK_BGCOLOR, DEFAULT_LIGHT_BGCOLOR, DEFAULT_DARK_BGCOLOR_BRIGHTNESS, LIMIT_LOW_BGCOLOR_BRIGHTNESS, DEFAULT_DARK_OFFSET_PERCEIVED_BRIGHTNESS, PAGE_HEIGHT, TABLE_NAME, IS_PC */
+/*! exports provided: MEDIA_QUERY, CLASS_PREFIX, HTML_CLASS, COLORATTR, BGCOLORATTR, ORIGINAL_COLORATTR, ORIGINAL_BGCOLORATTR, BGIMAGEATTR, TEXTCOLOR, DEFAULT_DARK_BGCOLOR, DEFAULT_LIGHT_BGCOLOR, GRAY_MASK_COLOR, DEFAULT_DARK_BGCOLOR_BRIGHTNESS, LIMIT_LOW_BGCOLOR_BRIGHTNESS, DEFAULT_DARK_OFFSET_PERCEIVED_BRIGHTNESS, PAGE_HEIGHT, TABLE_NAME, IS_PC */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -2651,6 +2651,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "TEXTCOLOR", function() { return TEXTCOLOR; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "DEFAULT_DARK_BGCOLOR", function() { return DEFAULT_DARK_BGCOLOR; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "DEFAULT_LIGHT_BGCOLOR", function() { return DEFAULT_LIGHT_BGCOLOR; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "GRAY_MASK_COLOR", function() { return GRAY_MASK_COLOR; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "DEFAULT_DARK_BGCOLOR_BRIGHTNESS", function() { return DEFAULT_DARK_BGCOLOR_BRIGHTNESS; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "LIMIT_LOW_BGCOLOR_BRIGHTNESS", function() { return LIMIT_LOW_BGCOLOR_BRIGHTNESS; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "DEFAULT_DARK_OFFSET_PERCEIVED_BRIGHTNESS", function() { return DEFAULT_DARK_OFFSET_PERCEIVED_BRIGHTNESS; });
@@ -2679,6 +2680,8 @@ var TEXTCOLOR = 'rgb(25,25,25)'; // 非Dark Mode下字体颜色
 var DEFAULT_DARK_BGCOLOR = '#191919'; // Dark Mode下背景颜色
 
 var DEFAULT_LIGHT_BGCOLOR = '#fff'; // 非Dark Mode下背景颜色
+
+var GRAY_MASK_COLOR = 'rgba(0,0,0,0.1)'; // 灰色蒙层色值
 
 var DEFAULT_DARK_BGCOLOR_BRIGHTNESS = 25;
 var LIMIT_LOW_BGCOLOR_BRIGHTNESS = 60;
@@ -3434,8 +3437,7 @@ var SDK = /*#__PURE__*/function () {
 
           if ((isBackgroundAttr || isBorderImageAttr) && /url\([^\)]*\)/i.test(value)) {
             cssChange = true;
-            var imgBgColor = el.getAttribute(_constant__WEBPACK_IMPORTED_MODULE_2__["ORIGINAL_BGCOLORATTR"]) || _constant__WEBPACK_IMPORTED_MODULE_2__["DEFAULT_LIGHT_BGCOLOR"];
-            var imgBgCover = 'rgba(0,0,0,0.1)'; // 在背景图片下加一层原背景颜色：
+            var imgBgColor = el.getAttribute(_constant__WEBPACK_IMPORTED_MODULE_2__["ORIGINAL_BGCOLORATTR"]) || _constant__WEBPACK_IMPORTED_MODULE_2__["DEFAULT_LIGHT_BGCOLOR"]; // 在背景图片下加一层原背景颜色：
             // background-image使用多层背景(注意background-position也要多加一层 https://www.w3.org/TR/css-backgrounds-3/#layering)；
             // border-image不支持多层背景，需要添加background-color
 
@@ -3454,7 +3456,7 @@ var SDK = /*#__PURE__*/function () {
 
 
               if (isBackgroundAttr) {
-                newValue = "linear-gradient(".concat(imgBgCover, ", ").concat(imgBgCover, "),").concat(matches);
+                newValue = "linear-gradient(".concat(_constant__WEBPACK_IMPORTED_MODULE_2__["GRAY_MASK_COLOR"], ", ").concat(_constant__WEBPACK_IMPORTED_MODULE_2__["GRAY_MASK_COLOR"], "),").concat(matches);
                 tmpCssKvStr = _this._cssUtils.genCssKV(key, "".concat(newValue, ",linear-gradient(").concat(imgBgColor, ", ").concat(imgBgColor, ")"));
 
                 if (elBackgroundPositionAttr) {
@@ -3473,7 +3475,7 @@ var SDK = /*#__PURE__*/function () {
 
               } else {
                 // border-image元素，如果当前元素没有背景颜色，补背景颜色
-                !hasInlineBackground && _this._bgStack.push(el, _this._cssUtils.genCssKV('background-image', "linear-gradient(".concat(imgBgCover, ", ").concat(imgBgCover, "),linear-gradient(").concat(imgBgColor, ", ").concat(imgBgColor, ")"))); // 背景图入栈
+                !hasInlineBackground && _this._bgStack.push(el, _this._cssUtils.genCssKV('background-image', "linear-gradient(".concat(_constant__WEBPACK_IMPORTED_MODULE_2__["GRAY_MASK_COLOR"], ", ").concat(_constant__WEBPACK_IMPORTED_MODULE_2__["GRAY_MASK_COLOR"], "),linear-gradient(").concat(imgBgColor, ", ").concat(imgBgColor, ")"))); // 背景图入栈
               }
 
               return newValue;
